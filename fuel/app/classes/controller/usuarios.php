@@ -7,7 +7,7 @@ class Controller_usuarios extends Controller_Rest
 
     public function post_create()
     {
-        //try {
+        try {
             
             if (!isset($_POST['name']) || !isset($_POST['password'])) 
             {
@@ -33,7 +33,7 @@ class Controller_usuarios extends Controller_Rest
 
             return $json;
 
-        /*} 
+        } 
         catch (Exception $e) 
         {
             $json = $this->response(array(
@@ -42,7 +42,7 @@ class Controller_usuarios extends Controller_Rest
             ));
 
             return $json;
-        }*/
+        }
 
         
     }
