@@ -3,20 +3,12 @@ use \Firebase\JWT\JWT;
  
 class Controller_usuarios extends Controller_Rest
 {
-   private $encriptado = "klafdlblbldfihbdvijbfsavliljkdfijlbadfilaslfvñkjafdvkñjnfvñ";
+   private $key = "klafdlblbldfihbdvijbfsavliljkdfijlbadfilaslfvñkjafdvkñjnfvñ";
 
     public function post_create()
     {
-        try {
-            if(empty($_POST['name']) || empty($_POST['password']))
-                {
-                    $json = $this->response(array(
-                    'code' => 400,
-                    'message' => 'parametro incorrecto, se necesita que el parametro se llame name'
-                ));
-
-                return $json;
-                }
+        //try {
+            
             if (!isset($_POST['name']) || !isset($_POST['password'])) 
             {
                 $json = $this->response(array(
@@ -41,7 +33,7 @@ class Controller_usuarios extends Controller_Rest
 
             return $json;
 
-        } 
+        /*} 
         catch (Exception $e) 
         {
             $json = $this->response(array(
@@ -50,7 +42,7 @@ class Controller_usuarios extends Controller_Rest
             ));
 
             return $json;
-        }
+        }*/
 
         
     }
@@ -100,7 +92,7 @@ class Controller_usuarios extends Controller_Rest
         }
             
         
-        $decode = JWT::encode($user, $encriptado,array('HS256'));
+        $decode = JWT::encode($user,$this->$key,array('HS256'));
 
           $json = $this->response(array(
             'code' => 200,
