@@ -82,25 +82,34 @@ class Controller_usuarios extends Controller_Rest
             $json = $this->response(array(
                     'code' => 400,
                     'message' => 'parametro incorrecto',
-                    'name' => []
                     ));
             return $json;
         } 
-        foreach ($users as $key => $user) {
-            $user = array('name' => $user -> name,
-                            'password' => $user -> password);
-        }
-            
-        
-        $decode = JWT::encode($user,$this->$key,array('HS256'));
-
-          $json = $this->response(array(
+        else 
+        {
+            $name = $input['name'];
+            $password = $input['password'];
+            $token = array('name' => $name,
+                            'password' => $password);
+            $jwt = JWT::encode($token,$this->$key);
+            $json = $this->response(array(
             'code' => 200,
             'message' => 'usuario encontrado',
             'name' => $decode
-        ));    
-          print($decode);
-        return $json;  
+        ));  
+            return $json; 
+        }
+        /*foreach ($users as $key => $user) {
+            $user = array('name' => $user -> name,
+                            'password' => $user -> password);
+        }*/
+            
+        
+        //$decode = JWT::encode($user,$this->$key,array('HS256'));
+
+            
+          
+         
 
     }
 }

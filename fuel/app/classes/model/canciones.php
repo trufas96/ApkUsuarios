@@ -1,6 +1,6 @@
 <?php
 
-class Model_listas extends Orm\Model
+class Model_canciones extends Orm\Model
 {
 	protected static $_table_name = 'listas';
     protected static $_primary_key = array('id');
@@ -28,4 +28,4 @@ class Model_listas extends Orm\Model
         'cascade_delete' => false,
     )
 );
-}
+} 
