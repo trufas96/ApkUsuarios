@@ -43,14 +43,14 @@ class Controller_listas extends Controller_Rest
 
     public function get_listas()
     {
-    	$lists = Model_usuarios::find('all');
+    	$lists = Model_listas::find('all');
 
     	return $this->response(Arr::reindex($lists));
     }
     public function post_edit() 
     {
         $input = $_POST;
-        $lists = Model_Lists::find('all', array(
+        $lists = Model_listas::find('all', array(
                 'where' => array(
                     array('id_usuario', $info['id']),
                     array('id', $input['id']),

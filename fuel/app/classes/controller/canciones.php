@@ -68,7 +68,7 @@ class Controller_canciones extends Controller_Rest
     public function post_edit()
     {
         $input = $_POST;
-            $song = Model_Songs::find($input['id']);
+            $song = Model_canciones::find($input['id']);
             if(!empty($song))
             {
                 $query = DB::update('songs');
