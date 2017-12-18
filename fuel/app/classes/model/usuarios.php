@@ -9,6 +9,9 @@ class Model_usuarios extends Orm\Model
         'name' => array(
             'data_type' => 'varchar'   
         ),
+        'email' => array(
+            'data_type' => 'varchar'   
+        ),
         'password' => array(
             'data_type' => 'varchar'   
         )

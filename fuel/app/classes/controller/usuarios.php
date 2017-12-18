@@ -9,7 +9,7 @@ class Controller_usuarios extends Controller_Rest
     {
         try {
             
-            if (!isset($_POST['name']) || !isset($_POST['password'])) 
+            if (!isset($_POST['name']) || !isset($_POST['password'] || !isset($_POST['email']))) 
             {
                 $json = $this->response(array(
                     'code' => 400,
@@ -23,6 +23,7 @@ class Controller_usuarios extends Controller_Rest
             $user = new Model_usuarios();
             $user->name = $input['name'];
             $user->password = $input['password'];
+            $user->email = $input['email'];
             $user->save();
 
             $json = $this->response(array(
@@ -59,6 +60,7 @@ class Controller_usuarios extends Controller_Rest
         $user = Model_usuarios::find($_POST['id']);
         $userName = $user->name;
         $userName = $user->password;
+        $userName = $user->email;
         $user->delete();
 
         $json = $this->response(array(
@@ -69,13 +71,36 @@ class Controller_usuarios extends Controller_Rest
 
         return $json;
     }
+    public function post_edit() {
+        $input = $_POST;
+            $query = DB::update('users');
+            $query->where('id', '=', $input['id']);
+            $query->value('password', $input['password']);
+            $query->execute();
+            $response = $this->response(array(
+                'code' => 200,
+                'message' => 'Contraseña cambiada',
+                'data' => ''
+            ));
+        }
+        else
+        {
+            $response = $this->response(array(
+                'code' => 400,
+                'message' => 'El usuario debe loguearse primero',
+                'data' => ''
+            ));
+            return $response;
+        }
+    }
     public function get_validate()
     {
         $input = $_GET;
         $users = Model_usuarios::find('all', array(
             'where' => array(
                 array('name',$input['name'] ),
-                array('password',$input['password'] )
+                array('password',$input['password'],
+                array('email',$input['email'] )
             )
         ));
         if (empty($users)){
@@ -88,28 +113,20 @@ class Controller_usuarios extends Controller_Rest
         else 
         {
             $name = $input['name'];
-            $password = $input['password'];
-            $token = array('name' => $name,
-                            'password' => $password);
-            $jwt = JWT::encode($token,$this->$key);
+            $password = input['password'];
+            $email = input['email'];
+            foreach ($users as $key => $user) {
+                $user = array('name' => $name,
+                            'password' => $password,
+                            'email' => $email);
+            }
+            $data = JWT::encode($user,$this->$key);
             $json = $this->response(array(
-            'code' => 200,
-            'message' => 'usuario encontrado',
-            'name' => $decode
+                'code' => 200,
+                'message' => 'usuario encontrado',
+                'name' => $data
         ));  
             return $json; 
         }
-        /*foreach ($users as $key => $user) {
-            $user = array('name' => $user -> name,
-                            'password' => $user -> password);
-        }*/
-            
-        
-        //$decode = JWT::encode($user,$this->$key,array('HS256'));
-
-            
-          
-         
-
     }
 }

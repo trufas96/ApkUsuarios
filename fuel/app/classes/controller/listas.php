@@ -38,23 +38,51 @@ class Controller_listas extends Controller_Rest
             ));
 
             return $json;
-        }
-
-        
+        }  
     }
 
-    public function get_usuarios()
+    public function get_listas()
     {
     	$lists = Model_usuarios::find('all');
 
     	return $this->response(Arr::reindex($lists));
     }
-
+    public function post_edit() 
+    {
+        $input = $_POST;
+        $lists = Model_Lists::find('all', array(
+                'where' => array(
+                    array('id_usuario', $info['id']),
+                    array('id', $input['id']),
+                ),
+            ));
+        if(!empty($lists))
+        {
+            $query = DB::update('listas');
+            $query->where('id', '=', $input['id']);
+            $query->value('name', $input['name']);
+            $query->execute();
+            $json = $this->response(array(
+            'code' => 200,
+            'message' => 'Nombre cambiado',
+            'name' => ''
+        ));
+        }
+        else
+        {
+            $json = $this->response(array(
+            'code' => 400,
+            'message' => 'La lista no existe',
+            'name' => ''
+            ));
+            return $json;
+        }
+        
+    }
     public function post_delete()
     {
-        $list = Model_usuarios::find($_POST['id']);
+        $list = Model_listas::find($_POST['id']);
         $listName = $list->name;
-        $listName = $list->password;
         $list->delete();
 
         $json = $this->response(array(

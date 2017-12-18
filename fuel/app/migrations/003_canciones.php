@@ -10,6 +10,7 @@ class Canciones
         \DBUtil::create_table('canciones', array(
             'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true),
             'titulo' => array('type' => 'varchar', 'constraint' => 100),
+            'artista' => array('type' => 'varchar', 'constraint' => 100),
             'url' => array('type' => 'varchar', 'constraint' => 100),
             'id_usuarios' => array('constraint' => 11, 'type' => 'int'),
             ), 

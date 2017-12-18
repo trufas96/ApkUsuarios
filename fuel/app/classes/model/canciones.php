@@ -9,6 +9,9 @@ class Model_canciones extends Orm\Model
         'titulo' => array(
             'data_type' => 'varchar'   
         ),
+        'artista' => array(
+            'data_type' => 'varchar'   
+        ),
         'url' => array(
             'data_type' => 'varchar'   
         ),
