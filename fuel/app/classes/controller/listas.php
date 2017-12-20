@@ -14,17 +14,18 @@ class Controller_listas extends Controller_Rest
                 ));
 
                 return $json;
+
             }
 
             $input = $_POST;
             $list = new Model_listas();
-            $list->name = $input['lista'];
+            $list->lista = $input['lista'];
             $list->save();
 
             $json = $this->response(array(
                 'code' => 200,
                 'message' => 'usuario creado',
-                'name' => $input['lista']
+                'lista' => $input['lista']
             ));
 
             return $json;
@@ -65,7 +66,7 @@ class Controller_listas extends Controller_Rest
             $json = $this->response(array(
             'code' => 200,
             'message' => 'Nombre cambiado',
-            'name' => ''
+            'lista' => ''
         ));
         }
         else
@@ -73,7 +74,7 @@ class Controller_listas extends Controller_Rest
             $json = $this->response(array(
             'code' => 400,
             'message' => 'La lista no existe',
-            'name' => ''
+            'lista' => ''
             ));
             return $json;
         }
@@ -88,7 +89,7 @@ class Controller_listas extends Controller_Rest
         $json = $this->response(array(
             'code' => 200,
             'message' => 'usuario borrado',
-            'name' => $listName,
+            'lista' => $listName,
         ));
 
         return $json;

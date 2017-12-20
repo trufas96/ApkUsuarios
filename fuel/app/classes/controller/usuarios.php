@@ -3,18 +3,18 @@ use \Firebase\JWT\JWT;
  
 class Controller_usuarios extends Controller_Rest
 {
-   private $key = "klafdlblbldfihbdvijbfsavliljkdfijlbadfilaslfvñkjafdvkñjnfvñ";
+   private $key = 'klafdlblbldfihbdvijbfsavliljkdfijlbadfilaslfvñkjafdvkñjnfvñ';
 
     public function post_create()
     {
         try {
             
-            if (!isset($_POST['name']) || !isset($_POST['password'] || !isset($_POST['email']))) 
+            if (!isset($_POST['name']) || !isset($_POST['password']) || !isset($_POST['email']))
             {
                 $json = $this->response(array(
                     'code' => 400,
                     'message' => 'parametro incorrecto, se necesita que el parametro se llame name'
-                ));
+                    ));
 
                 return $json;
             }
@@ -70,11 +70,14 @@ class Controller_usuarios extends Controller_Rest
         ));
 
         return $json;
+
     }
-    /*public function post_edit() {
-        if 
-        $input = $_POST;
-            $query = DB::update('users');
+    public function post_edit() {
+        
+
+            $input = $_POST;
+            $query = DB::update('usuarios');
+
             $query->where('id', '=', $input['id']);
             $query->value('password', $input['password']);
             $query->execute();
@@ -83,17 +86,18 @@ class Controller_usuarios extends Controller_Rest
                 'message' => 'Contraseña cambiada',
                 'data' => ''
             ));
-        }
-        else
-        {
+            /*}
+            else
+            {   
+        
             $response = $this->response(array(
                 'code' => 400,
                 'message' => 'El usuario debe loguearse primero',
                 'data' => ''
             ));
             return $response;
-        }
-    }*/
+            }*/
+    }
     public function get_validate()
     {
         $input = $_GET;
