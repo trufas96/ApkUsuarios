@@ -71,7 +71,8 @@ class Controller_usuarios extends Controller_Rest
 
         return $json;
     }
-    public function post_edit() {
+    /*public function post_edit() {
+        if 
         $input = $_POST;
             $query = DB::update('users');
             $query->where('id', '=', $input['id']);
@@ -92,7 +93,7 @@ class Controller_usuarios extends Controller_Rest
             ));
             return $response;
         }
-    }
+    }*/
     public function get_validate()
     {
         $input = $_GET;
@@ -102,7 +103,9 @@ class Controller_usuarios extends Controller_Rest
                 array('password',$input['password'],
                 array('email',$input['email'] )
             )
-        ));
+            )
+        )
+    );
         if (empty($users)){
             $json = $this->response(array(
                     'code' => 400,
@@ -113,8 +116,8 @@ class Controller_usuarios extends Controller_Rest
         else 
         {
             $name = $input['name'];
-            $password = input['password'];
-            $email = input['email'];
+            $password = $input['password'];
+            $email = $input['email'];
             foreach ($users as $key => $user) {
                 $user = array('name' => $name,
                             'password' => $password,
