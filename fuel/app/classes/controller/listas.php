@@ -4,7 +4,54 @@ class Controller_listas extends Controller_Rest
 {
     public function post_create()
     {
-        try {
+        
+        $authenticado = self::requestAuthenticate();
+        if($authenticado == true)
+        {
+            try
+            {
+                $info = self::getUserInfo();
+                if(!isset($_POST['name']))
+                {
+                    $response = $this->response(array(
+                        'code' => 400,
+                        'message' => 'Debes rellenar los campos',
+                        'data' => ''
+                    ));
+                    return $response;
+                }
+                $input = $_POST;
+                $list = new Model_Lists();
+                $list->name = $input['name'];
+                $list->id_user = $info['id'];
+                $list->save();
+                $response = $this->response(array(
+                    'code' => 200,
+                    'message' => 'lista creada',
+                    'data' => ''
+                ));
+                return $response;
+            }
+            catch (Exception $e)
+            {
+                $response = $this->response(array(
+                    'code' => 500,
+                    'message' => 'Error del servidor',
+                    'data' => ''
+                    ));
+                return $response;
+            }
+        }
+        else
+        {
+            $response = $this->response(array(
+                'code' => 400,
+                'message' => 'El usuario debe loguearse primero',
+                'data' => ''
+            ));
+            return $response;
+        }
+        /*try {
             
             if (!isset($_POST['lista'])) 
             {
@@ -39,7 +86,7 @@ class Controller_listas extends Controller_Rest
             ));
 
             return $json;
-        }  
+        }*/ 
     }
 
     public function get_listas()

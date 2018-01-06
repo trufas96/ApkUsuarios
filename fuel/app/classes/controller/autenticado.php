@@ -2,8 +2,8 @@
 use \Firebase\JWT\JWT;
 class Controller_Base extends Controller_Rest
 {
-    private $key = "fnap3se2ghseo35g53ha7sopghseufhr378562387itgri6odfgou83";
-    protected function obtainData($users)
+    private $key = "ixjdpfbhgksjdfhglkadfghlkasd";
+    protected function obtenerDatos($users)
     {
         foreach ($users as $key => $user)
         {
@@ -24,32 +24,32 @@ class Controller_Base extends Controller_Rest
     protected function decodeInfo($token)
     {
 	    $decodedInfo = JWT::decode($token, $this->key, array('HS256')); 
-	    $info_array = (array) $decodedInfo;
-	    return $info_array;
+	    $arrayInfo = (array) $decodedInfo;
+	    return $arrayInfo;
     }
-    protected function getUserInfo()
+    protected function obtenerInfo()
     {
-        $headers = apache_request_headers();
-        $token = $headers['Authorization'];
+        $header = apache_request_headers();
+        $token = $header['Authorization'];
         $info = $this->decodeInfo($token);
         return $info;
     }
-    protected function requestAuthenticate()
+    protected function peticionAut()
     {
     	try 
     	{
-	        $headers = apache_request_headers();
-	        if(isset($headers['Authorization']))
+	        $header = apache_request_headers();
+	        if(isset($header['Authorization']))
 	        {
-	            $info = $this->decodeInfo($headers['Authorization']);
-	            $userQuery = Model_Users::find('all', array(
+	            $info = $this->decodeInfo($header['Authorization']);
+	            $QueryUsuarios = Model_Users::find('all', array(
 	                'where' => array(
 	                    array('name', $info['name']),
-	                    array('pass', $info['pass']),
+	                    array('password', $info['password']),
 	                ),
 	            ));
 	            
-	            if($userQuery != null){
+	            if($QueryUsuarios != null){
 	                return true;
 	            }else{
 	                return false;
