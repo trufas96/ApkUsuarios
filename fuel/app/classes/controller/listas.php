@@ -6,13 +6,16 @@ class Controller_listas extends Controller_Rest
     {
         
         $authenticado = self::requestAuthenticate();
+
         if($authenticado == true)
         {
             try
             {
-                $info = self::getUserInfo();
+                $info = self::obtenerInfo();
+
                 if(!isset($_POST['name']))
                 {
+
                     $response = $this->response(array(
                         'code' => 400,
                         'message' => 'Debes rellenar los campos',
@@ -20,17 +23,22 @@ class Controller_listas extends Controller_Rest
                     ));
                     return $response;
                 }
+
                 $input = $_POST;
-                $list = new Model_Lists();
+
+                $list = new Model_Listas();
                 $list->name = $input['name'];
                 $list->id_user = $info['id'];
                 $list->save();
+
                 $response = $this->response(array(
                     'code' => 200,
                     'message' => 'lista creada',
                     'data' => ''
                 ));
+
                 return $response;
+
             }
             catch (Exception $e)
             {
@@ -39,8 +47,10 @@ class Controller_listas extends Controller_Rest
                     'message' => 'Error del servidor',
                     'data' => ''
                     ));
+
                 return $response;
             }
+
         }
         else
         {
@@ -91,13 +101,97 @@ class Controller_listas extends Controller_Rest
 
     public function get_listas()
     {
-    	$lists = Model_listas::find('all');
+        $autenticado = self::requestAuthenticate();
+        if($autenticado == true)
+        {
+            $info = self::getUserInfo();
+            $lista = Model_Lists::find('all', array(
+                'where' => array(
+                    array('id_usuario', $info['id']),
+                ),
+            ));
+            if(!empty($listaUsuarios))
+            {
+                foreach ($listaUsuarios as $key => $list)
+                {
+                    $lists[] = $list->name;
+                }
+                $response = $this->response(array(
+                    'code' => 200,
+                    'message' => 'Listas obtenidas',
+                    'name' => $lists
+                ));
+                return $response;
+            }
+            else
+            {
+                $response = $this->response(array(
+                    'code' => 400,
+                    'message' => 'No existen listas asociadas a esta cuenta',
+                    'name' => ''
+                ));
+                return $response;
+            }
+        }
+        else
+        {
+            $response = $this->response(array(
+                'code' => 400,
+                'message' => 'El usuario debe loguearse primero',
+                'name' => ''
+            ));
+            return $response;
+        }
+    	/*$lists = Model_listas::find('all');
 
-    	return $this->response(Arr::reindex($lists));
+    	return $this->response(Arr::reindex($lists));*/
     }
     public function post_edit() 
     {
-        $input = $_POST;
+        $autenticado = self::requestAuthenticate();
+        if($autenticado == true)
+        {
+            $info = self::obtenerInfo();
+            $input = $_POST;
+            $listaUsuarios = Model_Lists::find('all', array(
+                'where' => array(
+                    array('id_usuario', $info['id']),
+                    array('id', $input['id']),
+                ),
+            ));
+            if(!empty($listaUsuarios))
+            {
+                $query = DB::update('listas');
+                $query->where('id', '=', $input['id']);
+                $query->value('name', $input['name']);
+                $query->execute();
+
+                $response = $this->response(array(
+                    'code' => 200,
+                    'message' => 'Nombre cambiado',
+                    'name' => ''
+                ));
+            }
+            else
+            {
+                $response = $this->response(array(
+                'code' => 400,
+                'message' => 'Esa lista no existe',
+                'name' => ''
+                ));
+                return $response;
+            }
+        }
+        else
+        {
+            $response = $this->response(array(
+                'code' => 400,
+                'message' => 'El usuario debe loguearse primero',
+                'name' => ''
+            ));
+            return $response;
+        }
+        /*$input = $_POST;
         $lists = Model_listas::find('all', array(
                 'where' => array(
                     array('id_usuario', $info['id']),
@@ -113,7 +207,7 @@ class Controller_listas extends Controller_Rest
             $json = $this->response(array(
             'code' => 200,
             'message' => 'Nombre cambiado',
-            'lista' => ''
+            'name' => ''
         ));
         }
         else
@@ -121,25 +215,68 @@ class Controller_listas extends Controller_Rest
             $json = $this->response(array(
             'code' => 400,
             'message' => 'La lista no existe',
-            'lista' => ''
+            'name' => ''
             ));
             return $json;
-        }
+        }*/
         
     }
     public function post_delete()
     {
-        $list = Model_listas::find($_POST['id']);
+        $autenticado = self::peticionAut();
+        if($autenticado == true)
+        {
+            $info = self::getUserInfo();
+            $input = $_POST;
+            
+            $userLists = Model_Listas::find('all', array(
+                'where' => array(
+                    array('id_user', $info['id']),
+                    array('id', $input['id']),
+                ),
+            ));
+            if(!empty($userLists))
+            {
+                $userLists[$input['id']]->delete();
+                $response = $this->response(array(
+                    'code' => 200,
+                    'message' => 'Lista borrada',
+                    'data' => ''
+                ));
+                return $response;
+            }
+            else
+            {
+                $response = $this->response(array(
+                'code' => 400,
+                'message' => 'Esa lista no existe',
+                'data' => ''
+                ));
+                return $response;
+            }
+            
+        }
+        else
+        {
+            $response = $this->response(array(
+                'code' => 400,
+                'message' => 'El usuario debe loguearse primero',
+                'data' => ''
+            ));
+            return $response;
+        }
+    }
+        /*$list = Model_listas::find($_POST['id']);
         $listName = $list->name;
         $list->delete();
 
         $json = $this->response(array(
             'code' => 200,
             'message' => 'usuario borrado',
-            'lista' => $listName,
+            'name' => $listName,
         ));
 
         return $json;
-    }
+    }*/
     
 }
