@@ -229,15 +229,15 @@ class Controller_listas extends Controller_Rest
             $info = self::getUserInfo();
             $input = $_POST;
             
-            $userLists = Model_Listas::find('all', array(
+            $listName = Model_Listas::find('all', array(
                 'where' => array(
                     array('id_user', $info['id']),
                     array('id', $input['id']),
                 ),
             ));
-            if(!empty($userLists))
+            if(!empty($listName))
             {
-                $userLists[$input['id']]->delete();
+                $listName[$input['id']]->delete();
                 $response = $this->response(array(
                     'code' => 200,
                     'message' => 'Lista borrada',
